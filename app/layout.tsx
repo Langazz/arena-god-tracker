@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Arena God Tracker",
+	title: "Arena Dogs 2nd Place Tracker",
 	description:
-		"Allows you to track your progress in achieving the Arena God title. Automatically tracks your wins in arena too.",
+		"Track your progress in achieving 2nd place finishes in Arena mode with multiple profiles.",
 };
 
 export default function RootLayout({

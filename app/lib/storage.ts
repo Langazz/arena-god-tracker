@@ -1,63 +1,40 @@
-import { RiotId, MatchResult, ArenaProgress, MatchInfo } from "../types";
+import { Profile } from "../types";
 
 const STORAGE_KEYS = {
 	RIOT_ID: "arena-god-riot-id",
-	MATCH_HISTORY: "arena-god-match-history",
-	ARENA_PROGRESS: "arena-god-progress",
 	MATCH_CACHE: "arena-god-match-cache",
+	PROFILES: "arena-god-profiles",
 } as const;
 
-export function getRiotId(): RiotId | null {
-	if (typeof window === "undefined") return null;
-	const stored = localStorage.getItem(STORAGE_KEYS.RIOT_ID);
-	return stored ? JSON.parse(stored) : null;
-}
-
-export function setRiotId(riotId: RiotId) {
-	if (typeof window === "undefined") return;
-	localStorage.setItem(STORAGE_KEYS.RIOT_ID, JSON.stringify(riotId));
-}
-
-export function getMatchHistory(): MatchResult[] {
+export function getProfiles(): Profile[] {
 	if (typeof window === "undefined") return [];
-	const stored = localStorage.getItem(STORAGE_KEYS.MATCH_HISTORY);
+	const stored = localStorage.getItem(STORAGE_KEYS.PROFILES);
 	return stored ? JSON.parse(stored) : [];
 }
 
-export function setMatchHistory(history: MatchResult[]) {
+export function setProfiles(profiles: Profile[]) {
 	if (typeof window === "undefined") return;
-	localStorage.setItem(STORAGE_KEYS.MATCH_HISTORY, JSON.stringify(history));
+	localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(profiles));
 }
 
-export function getArenaProgress(): ArenaProgress {
-	if (typeof window === "undefined") return { firstPlaceChampions: [] };
-	const stored = localStorage.getItem(STORAGE_KEYS.ARENA_PROGRESS);
-	return stored ? JSON.parse(stored) : { firstPlaceChampions: [] };
+export function getProfile(id: string): Profile | null {
+	const profiles = getProfiles();
+	return profiles.find(p => p.id === id) || null;
 }
 
-export function setArenaProgress(progress: ArenaProgress) {
-	if (typeof window === "undefined") return;
-	localStorage.setItem(STORAGE_KEYS.ARENA_PROGRESS, JSON.stringify(progress));
+export function updateProfile(profile: Profile) {
+	const profiles = getProfiles();
+	const index = profiles.findIndex(p => p.id === profile.id);
+	if (index !== -1) {
+		profiles[index] = profile;
+	} else {
+		profiles.push(profile);
+	}
+	setProfiles(profiles);
 }
 
-export function getMatchCache(): Record<string, MatchInfo> {
-	if (typeof window === "undefined") return {};
-	const stored = localStorage.getItem(STORAGE_KEYS.MATCH_CACHE);
-	return stored ? JSON.parse(stored) : {};
-}
-
-export function setMatchCache(cache: Record<string, MatchInfo>) {
-	if (typeof window === "undefined") return;
-	localStorage.setItem(STORAGE_KEYS.MATCH_CACHE, JSON.stringify(cache));
-}
-
-export function getCachedMatch(matchId: string): MatchInfo | null {
-	const cache = getMatchCache();
-	return cache[matchId] || null;
-}
-
-export function cacheMatch(matchId: string, matchInfo: MatchInfo) {
-	const cache = getMatchCache();
-	cache[matchId] = matchInfo;
-	setMatchCache(cache);
+export function deleteProfile(id: string) {
+	const profiles = getProfiles();
+	const filtered = profiles.filter(p => p.id !== id);
+	setProfiles(filtered);
 }

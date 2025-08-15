@@ -1,18 +1,16 @@
-import { MatchInfo as RiotMatchInfo } from "../lib/riot-api";
-
-export interface RiotId {
-	gameName: string;
-	tagLine: string;
+export interface Profile {
+	id: string;
+	name: string;
+	firstplacechampions: string[]; // Changed to match database field name
+	created_at?: string;
+	updated_at?: string;
 }
 
-export interface MatchResult {
-	champion: string;
-	placement: number;
-	matchId: string;
+export interface ChampionProgress {
+	id: string;
+	profile_id: string;
+	champion_name: string;
+	is_completed: boolean;
+	created_at?: string;
+	updated_at?: string;
 }
-
-export interface ArenaProgress {
-	firstPlaceChampions: string[];
-}
-
-export type MatchInfo = RiotMatchInfo;
